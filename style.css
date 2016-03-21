@@ -5,6 +5,7 @@ body {
 }
 #slider {
     position: relative;
+    height: 420px;
     /*overflow: hidden;*/
 }
 
