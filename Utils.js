@@ -4,7 +4,7 @@
  * @param  {string} src The source attribute for the requested image.
  * @return {Element}     A DOM Element
  */
-export function createImage(src) {
+const createImage = (src) => {
   let wrapperDiv = document.createElement('div');
   wrapperDiv.setAttribute('Class', 'slide');
 
@@ -14,3 +14,15 @@ export function createImage(src) {
   wrapperDiv.appendChild(tempImage);
   return wrapperDiv;
 }
+
+/**
+ * Helper function used for development to see the internal state of
+ * the slider object.
+ * @param  {Object} state [Main slider state object]
+ * @return {Object}       [Returns the sliders main state object.]
+ */
+const getState = (state) => ({
+  getState: () => state
+});
+
+export{ createImage, getState }
