@@ -8,9 +8,42 @@ import { createImage } from './Utils';
 const cacheDOM = (state) => ({
   cacheDOM: () => {
     state.slides = document.getElementsByClassName( 'slide' );
-    state.slideCount = state.slides.length;
   }
 });
+
+/**
+ * Function updates the slider count by one. Also calls Show and hide
+ * functions to actually move from slide to slide.
+ * @param  {Object} state The sliders state object.
+ * @return {Object}       Returns an updated state object.
+ */
+const increment = (state) => ({
+  next: () => {
+    state.hide(state.count, state.slides);
+    state.count++;
+    if ( state.count > state.numSlides ) {
+      state.count = 0;
+    }
+    state.show(state.count, state.slides);
+  }
+});
+
+/**
+ * Function substracts one from the sliders count. Also calls Show and hide
+ * functions to actually move from slide to slide.
+ * @param  {Object} state The sliders state object.
+ * @return {Object}       Returns an updated state object.
+ */
+const decrement = (state) => ({
+  previous: () => {
+    state.hide(state.count, state.slides);
+    state.count--;
+    if ( state.count < 0 ) {
+      state.count = state.numSlides;
+    }
+    state.show(state.count, state.slides);
+  }
+})
 
 /**
  * Function loops through the user supplied images array, and created
@@ -35,7 +68,7 @@ const renderSlider = (state) => ({
   render: () => {
     state.images.forEach(function(image){
       state.container.appendChild(image)
-    })
+    });
   }
 });
 
@@ -59,11 +92,17 @@ const slider = (imageArray, container) => {
   let state = {
     imageArray: imageArray,
     container: document.getElementById(container),
+    count: 0,
+    numSlides: imageArray.length -1,
+    show: (count, slides) => slides[count].style.opacity = '1',
+    hide: (count, slides) => slides[count].style.opacity = '0'
   }
   return Object.assign(
     {},
     buildSildes(state),
     cacheDOM(state),
+    increment(state),
+    decrement(state),
     renderSlider(state),
     getState(state)
   )
@@ -78,11 +117,26 @@ let images = [
   'photos/photo6.jpeg'
 ];
 
-document.addEventListener('DOMContentLoaded', function(){
-  let mySlider = slider(images,'slider');
-  mySlider.build();
 
-  mySlider.render();
-  mySlider.cacheDOM();
-  console.log(mySlider.getState());
+const sliderWithNav = (imageArray, container) => {
+  let sliderWithNav = slider(imageArray, container);
+  sliderWithNav.build();
+  sliderWithNav.render();
+  sliderWithNav.cacheDOM();
+  return {
+    next: sliderWithNav.next,
+    previous: sliderWithNav.previous
+  }
+}
+document.addEventListener('DOMContentLoaded', function(){
+  let mySlider = sliderWithNav(images,'slider');
+  let next = document.getElementById('next');
+  let previous = document.getElementById('previous');
+  next.addEventListener('click', function(){
+    mySlider.next();
+  });
+  previous.addEventListener('click', function(){
+    mySlider.previous();
+  });
+
 });
