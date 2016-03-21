@@ -8,8 +8,13 @@ body {
     height: 420px;
     /*overflow: hidden;*/
 }
+#another-slider {
+    position: relative;
+    height: 420px;
+    /*overflow: hidden;*/
+}
 
-#slider .slide {
+#slider .slide, #another-slider .slide {
     position: absolute;
     top: 0;
     left: 0;
@@ -18,12 +23,12 @@ body {
     transition:opacity 0.5s linear
 }
 
-#slider .slide img {
+#slider .slide img, #another-slider .slide img {
 	width: 100%;
    /* height: 400px;*/
 }
 
-#slider .slide:first-child {
+#slider .slide:first-child, #another-slider .slide:first-child {
     /*visibility: visible;*/
     opacity:1;
 }
